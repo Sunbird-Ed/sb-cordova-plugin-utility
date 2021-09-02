@@ -332,14 +332,18 @@ class DeviceSpec {
         }
         var results = [String: Any]()
         for identifier in identifiersList {
-            let directoryPath = "file://" + parentDirectoryPath + identifier
+            let directoryPath = parentDirectoryPath + identifier
             if !directoryExistsAtPath(directoryPath) {
-                let created = try? FileManager.default.createDirectory(atPath: directoryPath, withIntermediateDirectories: false, attributes: nil)
-                if created != nil {
-                    results[identifier] = ["path": directoryPath]
-                } else {
-                    print("Error creating directory at path \(directoryPath)")
+                do {
+                    let created = try? FileManager.default.createDirectory(atPath: directoryPath, withIntermediateDirectories: true, attributes: nil)
+                    results[identifier] = ["path": "file://"+directoryPath]
                 }
+                catch let error as NSError {
+                   print(error.localizedDescription)
+               }
+                
+            } else {
+                results[identifier] = ["path": "file://"+directoryPath]
             }
         }
         pluginResult = CDVPluginResult.init(status: CDVCommandStatus_OK, messageAs: results)
@@ -422,16 +426,7 @@ class DeviceSpec {
                 let identifier: String? = config["identifier"] as? String
                 if filePath != nil && identifier != nil {
                     do {
-                        //let attr : NSDictionary? = try fileManager.attributesOfItem(atPath: actualPath!) as NSDictionary
-                        //let attr : NSDictionary? = try fileManager.attributesOfFileSystem(forPath: actualPath!) as NSDictionary
                         let size = getDirectorySize(urlToInclude: URL(fileURLWithPath: filePath!)) as Int64
-                        /*if let _attr = attr {
-                            var attributes: [String: Any] = [:]
-                            attributes["size"] = _attr.fileSize();
-                            attributes["fileModificationDate"] = _attr.fileModificationDate()
-                            output[identifier!] = attributes
-                        }
-                        }*/
                         var attributes: [String: Any] = [:]
                         attributes["size"] = size;
                         attributes["fileModificationDate"] = nil
@@ -623,6 +618,10 @@ class DeviceSpec {
             if fileManager.fileExists(atPath: sourceFilePath) {
                 print("File exists")
                 do {
+                    if(fileManager.fileExists(atPath: destinationFilePath)) {
+                        print("Destination File exists Do Overwrite")
+                        try fileManager.removeItem(atPath: destinationFilePath)
+                    }
                     try fileManager.copyItem(atPath: sourceFilePath, toPath: destinationFilePath)
                     
                     print("Copy successful")
@@ -853,5 +852,3 @@ class DeviceSpec {
         }
     }
 }
-
-
