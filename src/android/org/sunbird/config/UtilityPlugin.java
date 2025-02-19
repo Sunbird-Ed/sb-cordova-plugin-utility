@@ -678,15 +678,12 @@ public class UtilityPlugin extends CordovaPlugin {
         if (onActivityResultCallbackContext != null && intent != null) {
             intent.putExtra("requestCode", requestCode);
             intent.putExtra("resultCode", resultCode);
-             if (requestCode == 1 && resultCode == Activity.RESULT_OK) { // Assuming 1 is the request code for file selection
+            if (requestCode == 1 && resultCode == this.cordova.getActivity().RESULT_OK) {
             Uri selectedFileUri = intent.getData();  // Get the selected file URI
 
             if (selectedFileUri != null) {
                 try {
                     InputStream inputStream = cordova.getActivity().getContentResolver().openInputStream(selectedFileUri);
-                    // Convert inputStream to string or bytes if needed
-                    String filePath = selectedFileUri.toString(); // You can use this for reference
-
                     // Send the file URI to the Cordova callback
                     JSONObject fileResult = new JSONObject();
                     fileResult.put("fileUri", filePath);
