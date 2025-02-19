@@ -712,10 +712,13 @@ public class UtilityPlugin extends CordovaPlugin {
 
     private void openFileManager(CallbackContext callbackContext) {
         this.onActivityResultCallbackContext = callbackContext;
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        // Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        Intent intent = IntentUtil.populateIntent(object, callbackContext);
         Uri uri = Uri.parse(cordova.getContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString());
         intent.setDataAndType(uri, "*/*");
-        this.cordova.getActivity().startActivity(intent);
+        JSONObject object = args.getJSONObject(0);
+        int requestCode = object.has("requestCode") ? object.getInt("requestCode") : 1;
+            this.cordova.getActivity().startActivityForResult(intent, requestCode);
         }
 
     private static void isGoogleServicesAvailable(CordovaInterface cordova, CallbackContext callbackContext) {
