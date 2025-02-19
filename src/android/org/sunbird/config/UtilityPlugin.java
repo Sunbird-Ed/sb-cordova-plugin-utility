@@ -689,7 +689,7 @@ public class UtilityPlugin extends CordovaPlugin {
                     onActivityResultCallbackContext.sendPluginResult(result);
                     this.onActivityResultCallbackContext = null; // Cleanup
                     return; // Exit after handling file selection
-                } catch (JSONException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                     onActivityResultCallbackContext.error("Error processing file selection: " + e.getMessage());
                 }
