@@ -6,13 +6,13 @@
     <description></description>
     <license>MIT</license>
     <keywords></keywords>
-     <framework src="build-extras.gradle" custom="true" type="gradleReference"/>
     <js-module src="www/plugin.js" name="SBUTILITY">
         <clobbers target="sbutility" />
     </js-module>
     
     <!-- android -->
     <platform name="android">
+     <framework src="build-extras.gradle" custom="true" type="gradleReference"/>
       <framework src="com.android.installreferrer:installreferrer:1.1" />
       <framework src="com.google.android.gms:play-services-safetynet:16.0.0" />  
       <framework src="com.google.android.play:core:1.9.1" />
