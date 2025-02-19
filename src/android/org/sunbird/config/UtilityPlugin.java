@@ -685,8 +685,11 @@ public class UtilityPlugin extends CordovaPlugin {
 
              if (selectedFileUri != null) {
                 try {
-                    // Convert Uri to file path (optional, if needed)
-                    String filePath = selectedFileUri.toString();
+                   String filePath = getRealPathFromURI(selectedFileUri);
+
+                    if (filePath == null) {
+                        filePath = selectedFileUri.toString(); // Fallback to URI string if file path is unavailable
+                    }
 
                     // Create JSON response
                     JSONObject fileResult = new JSONObject();
