@@ -143,7 +143,7 @@ public class UtilityPlugin extends CordovaPlugin {
             startActivity(intent, requestCode, callbackContext);
             return true;
         }else if (action.equalsIgnoreCase("openFileManager")) {
-            openFileManager();
+            openFileManager(callbackContext);
             return true;
         }else if (args.get(0).equals("makeEntryInSunbirdSupportFile")) {
             this.callbackContext = callbackContext;
@@ -711,7 +711,7 @@ public class UtilityPlugin extends CordovaPlugin {
     }
 
     private void openFileManager(CallbackContext callbackContext) {
-            this.onActivityResultCallbackContext = callbackContext;
+        this.onActivityResultCallbackContext = callbackContext;
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         Uri uri = Uri.parse(cordova.getContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString());
         intent.setDataAndType(uri, "*/*");
