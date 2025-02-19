@@ -143,7 +143,7 @@ public class UtilityPlugin extends CordovaPlugin {
             startActivity(intent, requestCode, callbackContext);
             return true;
         }else if (action.equalsIgnoreCase("openFileManager")) {
-            openFileManager();
+            openFileManager(callbackContext);
             return true;
         }else if (args.get(0).equals("makeEntryInSunbirdSupportFile")) {
             this.callbackContext = callbackContext;
@@ -711,10 +711,10 @@ public class UtilityPlugin extends CordovaPlugin {
     }
 
     private void openFileManager(CallbackContext callbackContext) {
-        this.onActivityResultCallbackContext = callbackContext; // Store callback for later use
+        this.onActivityResultCallbackContext = callbackContext;
     Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-    intent.setType("*/*"); // Allow any file type
-    intent.addCategory(Intent.CATEGORY_OPENABLE); // Ensure files can be opened
+    intent.setType("*/*");
+    intent.addCategory(Intent.CATEGORY_OPENABLE);
 
     // Start the activity and wait for result
     this.cordova.startActivityForResult(this, intent, 1);
