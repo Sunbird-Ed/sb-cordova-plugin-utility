@@ -710,7 +710,7 @@ public class UtilityPlugin extends CordovaPlugin {
         this.onActivityResultCallbackContext = null;
     }
 
-    private void openFileManager(CordovaArgs args, CallbackContext callbackContext) {
+    private void openFileManager(CallbackContext callbackContext) {
             this.onActivityResultCallbackContext = callbackContext;
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         Uri uri = Uri.parse(cordova.getContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString());
