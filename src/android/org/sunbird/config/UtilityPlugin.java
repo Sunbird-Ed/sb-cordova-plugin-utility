@@ -678,7 +678,7 @@ public class UtilityPlugin extends CordovaPlugin {
         if (onActivityResultCallbackContext != null && intent != null) {
             intent.putExtra("requestCode", requestCode);
             intent.putExtra("resultCode", resultCode);
-            printf("intent",intent)
+            printf("intent",intent);
             printf("requestCode: " + requestCode + " resultCode: " + resultCode);
             if (requestCode == 1 && resultCode == this.cordova.getActivity().RESULT_OK) {
             Uri selectedFileUri = intent.getData();  // Get the selected file URI
