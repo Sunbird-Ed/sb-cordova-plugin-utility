@@ -678,22 +678,29 @@ public class UtilityPlugin extends CordovaPlugin {
         if (onActivityResultCallbackContext != null && intent != null) {
             intent.putExtra("requestCode", requestCode);
             intent.putExtra("resultCode", resultCode);
+            printf("intent",intent)
+            printf("requestCode: " + requestCode + " resultCode: " + resultCode);
             if (requestCode == 1 && resultCode == this.cordova.getActivity().RESULT_OK) {
             Uri selectedFileUri = intent.getData();  // Get the selected file URI
 
-            if (selectedFileUri != null) {
+             if (selectedFileUri != null) {
                 try {
-                    InputStream inputStream = cordova.getActivity().getContentResolver().openInputStream(selectedFileUri);
-                    // Send the file URI to the Cordova callback
+                    // Convert Uri to file path (optional, if needed)
+                    String filePath = selectedFileUri.toString();
+
+                    // Create JSON response
                     JSONObject fileResult = new JSONObject();
                     fileResult.put("fileUri", filePath);
 
+                    // Send result back to Cordova callback
                     PluginResult result = new PluginResult(PluginResult.Status.OK, fileResult);
-                    result.setKeepCallback(true);
+                    result.setKeepCallback(false);  // Don't keep the callback active
                     onActivityResultCallbackContext.sendPluginResult(result);
+                    this.onActivityResultCallbackContext = null; // Cleanup
                     return; // Exit after handling file selection
-                } catch (IOException | JSONException e) {
+                } catch (JSONException e) {
                     e.printStackTrace();
+                    onActivityResultCallbackContext.error("Error processing file selection: " + e.getMessage());
                 }
             }
         }
