@@ -685,18 +685,8 @@ public class UtilityPlugin extends CordovaPlugin {
 
              if (selectedFileUri != null) {
                 try {
-                   String filePath = getRealPathFromURI(selectedFileUri);
-
-                    if (filePath == null) {
-                        filePath = selectedFileUri.toString(); // Fallback to URI string if file path is unavailable
-                    }
-
-                    // Create JSON response
-                    JSONObject fileResult = new JSONObject();
-                    fileResult.put("fileUri", filePath);
-
-                    // Send result back to Cordova callback
-                    PluginResult result = new PluginResult(PluginResult.Status.OK, fileResult);
+                   String filePath = selectedFileUri.toString();
+                    PluginResult result = new PluginResult(PluginResult.Status.OK, filePath);
                     result.setKeepCallback(false);  // Don't keep the callback active
                     onActivityResultCallbackContext.sendPluginResult(result);
                     this.onActivityResultCallbackContext = null; // Cleanup
