@@ -12,7 +12,6 @@
     
     <!-- android -->
     <platform name="android">
-     <framework src="build-extras.gradle" custom="true" type="gradleReference"/>
       <framework src="com.android.installreferrer:installreferrer:1.1" />
       <framework src="com.google.android.gms:play-services-safetynet:16.0.0" />  
       <framework src="com.google.android.play:core:1.9.1" />
@@ -23,6 +22,7 @@
         </feature>
       </config-file>
 
+     <framework src="build-extras.gradle" custom="true" type="gradleReference"/>
       <source-file src="src/android/org/sunbird/config/UtilityPlugin.java" target-dir="src/org/sunbird/config" />
       <source-file src="src/android/org/sunbird/config/ReflectionUtil.java" target-dir="src/org/sunbird/config" />
       <source-file src="src/android/org/sunbird/config/FileUtil.java" target-dir="src/org/sunbird/config" />
