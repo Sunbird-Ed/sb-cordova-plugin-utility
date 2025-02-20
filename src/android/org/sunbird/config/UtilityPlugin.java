@@ -573,6 +573,25 @@ public class UtilityPlugin extends CordovaPlugin {
 
     }
 
+    private void convertContentUriToFilePath(JSONArray args, CallbackContext callbackContext)  {
+        cordova.getThreadPool().execute(new Runnable() {
+            public void run() {
+                try {
+                    Uri uri = Uri.parse(args.getString(1));
+                    String filePath = FileUtil.convertContentUriToFilePath(cordova.getActivity(), uri);
+                    if (filePath != null) {
+                        callbackContext.success(filePath);
+                    } else {
+                        callbackContext.error("Failed to convert content URI to file path");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    callbackContext.error("Error converting content URI to file path: " + e.getMessage());
+                }
+            }
+        });
+    }
+
     private  void copyFile(JSONArray args, CallbackContext callbackContext)  {
         cordova.getThreadPool().execute(new Runnable() {
             public void run() {

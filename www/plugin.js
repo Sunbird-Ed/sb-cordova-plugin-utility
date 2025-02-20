@@ -111,6 +111,9 @@ var sbutility = {
     // getGoogleService: function (onSuccess, onError) {
     //     exec(onSuccess, onError, PLUGIN_NAME, "getGoogleService", ["getGoogleService"]);
     // }
+    convertContentUriToFilePath: function (filePath, onSuccess, onError) {
+        exec(onSuccess, onError, PLUGIN_NAME, "convertContentUriToFilePath", ["convertContentUriToFilePath",filePath]);
+    },
 };
 
 
