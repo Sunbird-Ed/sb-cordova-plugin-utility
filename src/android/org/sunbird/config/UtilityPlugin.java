@@ -573,25 +573,37 @@ public class UtilityPlugin extends CordovaPlugin {
 
     }
 
-    private void convertContentUriToFilePath(JSONArray args, CallbackContext callbackContext)  {
-        cordova.getThreadPool().execute(new Runnable() {
-            public void run() {
-                try {
-                    Uri uri = Uri.parse(args.getString(1));
-                    String filePath = FileUtil.convertContentUriToFilePath(cordova.getActivity(), uri);
-                    if (filePath != null) {
-                        callbackContext.success(filePath);
-                    } else {
-                        callbackContext.error("Failed to convert content URI to file path");
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    callbackContext.error("Error converting content URI to file path: " + e.getMessage());
-                }
+    public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
+        if ("resolvePath".equals(action)) {
+            String contentUri = args.getString(0);
+            String absolutePath = getPath(contentUri);
+            if (absolutePath != null) {
+                callbackContext.success(absolutePath);
+            } else {
+                callbackContext.error("Failed to resolve path");
             }
-        });
+            return true;
+        }
+        return false;
     }
 
+    @Nullable
+    private String getPath(String contentUri) {
+        Uri uri = Uri.parse(contentUri);
+        String[] projection = {MediaStore.Images.Media.DATA};
+        Cursor cursor = cordova.getContext().getContentResolver().query(uri, projection, null, null, null);
+        if (cursor != null) {
+            try {
+                if (cursor.moveToFirst()) {
+                    int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                    return cursor.getString(columnIndex);
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+        return null;
+    }
     private  void copyFile(JSONArray args, CallbackContext callbackContext)  {
         cordova.getThreadPool().execute(new Runnable() {
             public void run() {
