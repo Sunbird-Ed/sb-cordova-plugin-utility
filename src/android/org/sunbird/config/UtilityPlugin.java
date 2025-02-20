@@ -13,7 +13,6 @@ import android.os.Build;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
-import android.app.Activity;
 
 import androidx.annotation.NonNull;
 
@@ -143,7 +142,7 @@ public class UtilityPlugin extends CordovaPlugin {
             startActivity(intent, requestCode, callbackContext);
             return true;
         }else if (action.equalsIgnoreCase("openFileManager")) {
-            openFileManager(callbackContext);
+            openFileManager();
             return true;
         }else if (args.get(0).equals("makeEntryInSunbirdSupportFile")) {
             this.callbackContext = callbackContext;
@@ -252,7 +251,7 @@ public class UtilityPlugin extends CordovaPlugin {
         String param = args.getString(1);
         String value;
         try {
-            value = BuildConfigUtil.getBuildConfigValue("org.sunbird", param).toString();
+            value = BuildConfigUtil.getBuildConfigValue("org.sunbird.app", param).toString();
             callbackContext.success(value);
         } catch (Exception e) {
             callbackContext.error(e.getMessage());
@@ -675,26 +674,9 @@ public class UtilityPlugin extends CordovaPlugin {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
-         if (onActivityResultCallbackContext != null) {
-        if (requestCode == 1 && resultCode == Activity.RESULT_OK && intent != null) {
-            Uri selectedFileUri = intent.getData();  // Get the selected file URI
-
-            if (selectedFileUri != null) {
-                try {
-                    String filePath = selectedFileUri.toString(); // Convert URI to string
-                    PluginResult result = new PluginResult(PluginResult.Status.OK, filePath);
-                    result.setKeepCallback(false); // Close callback after response
-                    onActivityResultCallbackContext.sendPluginResult(result);
-                    onActivityResultCallbackContext = null; // Cleanup
-                    return; // Exit after handling file selection
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    onActivityResultCallbackContext.error("Error processing file selection: " + e.getMessage());
-                }
-            } else {
-                onActivityResultCallbackContext.error("No file selected");
-            }
-        } 
+        if (onActivityResultCallbackContext != null && intent != null) {
+            intent.putExtra("requestCode", requestCode);
+            intent.putExtra("resultCode", resultCode);
             PluginResult result = new PluginResult(PluginResult.Status.OK, IntentUtil.getIntentJson(intent));
             result.setKeepCallback(true);
             onActivityResultCallbackContext.sendPluginResult(result);
@@ -710,14 +692,11 @@ public class UtilityPlugin extends CordovaPlugin {
         this.onActivityResultCallbackContext = null;
     }
 
-    private void openFileManager(CallbackContext callbackContext) {
-        this.onActivityResultCallbackContext = callbackContext;
-    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-    intent.setType("*/*");
-    intent.addCategory(Intent.CATEGORY_OPENABLE);
-
-    // Start the activity and wait for result
-    this.cordova.startActivityForResult(this, intent, 1);
+    private void openFileManager() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        Uri uri = Uri.parse(cordova.getContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString());
+        intent.setDataAndType(uri, "*/*");
+        this.cordova.getActivity().startActivity(intent);
         }
 
     private static void isGoogleServicesAvailable(CordovaInterface cordova, CallbackContext callbackContext) {
