@@ -22,10 +22,10 @@ import com.google.android.gms.safetynet.SafetyNet;
 import com.google.android.gms.safetynet.SafetyNetApi;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.play.core.appupdate.AppUpdateManager;
-import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
-import com.google.android.play.core.install.model.AppUpdateType;
-import com.google.android.play.core.install.model.UpdateAvailability;
+import com.google.android.play.app.update.AppUpdateManager;
+import com.google.android.play.app.update.AppUpdateManagerFactory;
+import com.google.android.play.app.update.model.AppUpdateType;
+import com.google.android.play.app.update.model.UpdateAvailability;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
@@ -251,7 +251,7 @@ public class UtilityPlugin extends CordovaPlugin {
         String param = args.getString(1);
         String value;
         try {
-            value = BuildConfigUtil.getBuildConfigValue("org.sunbird.app", param).toString();
+            value = BuildConfigUtil.getBuildConfigValue("org.sunbird", param).toString();
             callbackContext.success(value);
         } catch (Exception e) {
             callbackContext.error(e.getMessage());
