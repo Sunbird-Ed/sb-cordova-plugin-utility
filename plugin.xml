@@ -6,7 +6,6 @@
     <description></description>
     <license>MIT</license>
     <keywords></keywords>
-     <framework src="build-extras.gradle" custom="true" type="gradleReference"/>
     <js-module src="www/plugin.js" name="SBUTILITY">
         <clobbers target="sbutility" />
     </js-module>
@@ -24,6 +23,7 @@
         </feature>
       </config-file>
 
+     <framework src="build-extras.gradle" custom="true" type="gradleReference"/>
       <source-file src="src/android/org/sunbird/config/UtilityPlugin.java" target-dir="src/org/sunbird/config" />
       <source-file src="src/android/org/sunbird/config/ReflectionUtil.java" target-dir="src/org/sunbird/config" />
       <source-file src="src/android/org/sunbird/config/FileUtil.java" target-dir="src/org/sunbird/config" />

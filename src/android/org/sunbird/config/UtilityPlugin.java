@@ -251,7 +251,7 @@ public class UtilityPlugin extends CordovaPlugin {
         String param = args.getString(1);
         String value;
         try {
-            value = BuildConfigUtil.getBuildConfigValue("org.sunbird", param).toString();
+            value = BuildConfigUtil.getBuildConfigValue("org.sunbird.app", param).toString();
             callbackContext.success(value);
         } catch (Exception e) {
             callbackContext.error(e.getMessage());
@@ -571,6 +571,25 @@ public class UtilityPlugin extends CordovaPlugin {
             }
         });
 
+    }
+
+    private void convertContentUriToFilePath(JSONArray args, CallbackContext callbackContext)  {
+        cordova.getThreadPool().execute(new Runnable() {
+            public void run() {
+                try {
+                    Uri uri = Uri.parse(args.getString(1));
+                    String filePath = cordova.getActivity().getContentResolver().query(uri, null, null, null, null).getString(0);
+                    if (filePath != null) {
+                        callbackContext.success(filePath);
+                    } else {
+                        callbackContext.error("Failed to convert content URI to file path");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    callbackContext.error("Error converting content URI to file path: " + e.getMessage());
+                }
+            }
+        });
     }
 
     private  void copyFile(JSONArray args, CallbackContext callbackContext)  {
